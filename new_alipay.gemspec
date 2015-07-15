@@ -8,6 +8,7 @@ Gem::Specification.new do |spec|
   spec.version = NewAlipay::VERSION
   spec.authors = ["saxer"]
   spec.email = ["15201280641@qq.com"]
+  spec.licenses = ["MIT"]
 
   spec.summary = %q{支付宝支付}
   spec.description = %q{支付宝移动支付}
