@@ -6,7 +6,8 @@ require 'base64'
 
 module NewAlipay
   class << self
-    attr_accessor :seller_email, :partner, :key, :rsa_private_key_path
+    attr_accessor :seller_email, :partner, :key
+    attr_accessor :rsa_private_key_path, :alipay_public_key_path
   end
   module_function
 
@@ -30,12 +31,26 @@ module NewAlipay
     rsa_sign(signing_str)
   end
 
+  #验证是否签名成功
+  def verify_rsa?(params)
+
+    sym_key_params = params.inject({}) { |memo, (key, v)| memo[key.to_s.to_sym]=v; memo }
+    org_sign = sym_key_params[:sign]
+    sym_key_params = sym_key_params.reject { |key, v| [:sign_type, :sign].include? key }
+    # sym_key_params = sym_key_params.inject([]) { |memo, (key, v)| memo << "#{key}=\"#{v}\""; memo }
+    sym_key_params = sym_key_params.inject([]) { |memo, (key, v)| memo << "#{key}=#{v}"; memo }
+    sym_key_params = sym_key_params.sort! { |m, n| m.to_s <=> n.to_s }
+    signing_str = sym_key_params.join("&")
+
+    rsa = OpenSSL::PKey::RSA.new File.read(self.alipay_public_key_path || "./config/alipay/quick/key/alipay_public_key.pem")
+    rsa.verify('sha1', Base64::decode64(org_sign), signing_str)
+  end
+
   #rsa签名
   def rsa_sign(signing_str)
     #读取私钥文件
     private_key_content = File.read(self.rsa_private_key_path || "./config/alipay/quick/key/rsa_private_key.pem")
 
-    p private_key_content
     private_key = OpenSSL::PKey::RSA.new private_key_content
     digest = OpenSSL::Digest::SHA1.new
     sign = Base64::encode64(private_key.sign(digest, signing_str))
