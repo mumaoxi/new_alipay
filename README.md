@@ -71,6 +71,27 @@ puts "\nverify:#{result}\n"
 #=>true
 ```
 
+###批量付款
+####配置文件
+将以下代码写入`config/initializers/new_alipay.rb`
+```ruby
+NewAlipay.seller_email='133xxxxyyyy'
+NewAlipay.partner='2088xxxxxxxxxx'
+NewAlipay.key='324234kuwerwerwerweewxxxxxxx'
+NewAlipay.account_name='xxxx公司/你的真实姓名'
+```
+####批量付款（获取url）
+```ruby
+
+ request_url = NewAlipay::BatchTrans.submit({
+                                           notify_url: 'http://test.yourserver.com/callback',
+                                           batch_fee: 0.01,
+                                           batch_num: 1,
+                                           detail_data: "#{Time.new.strftime('%Y%m%d')+18.times.inject('') { |acc, i| acc+=('0'..'9').to_a[(i+Random.rand(1000))%10]; acc }}^152xxxxyyyy^某某^0.01^测试支付"
+
+                                       })
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.

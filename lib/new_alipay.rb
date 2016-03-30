@@ -3,10 +3,11 @@ require "new_alipay/version"
 require "faraday"
 require 'openssl'
 require 'base64'
+require 'new_alipay/batch_trans'
 
 module NewAlipay
   class << self
-    attr_accessor :seller_email, :partner, :key
+    attr_accessor :seller_email, :partner, :key, :account_name
     attr_accessor :rsa_private_key_path, :alipay_public_key_path
   end
   module_function
