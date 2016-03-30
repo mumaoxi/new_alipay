@@ -37,7 +37,6 @@ module NewAlipay
     sym_key_params = params.inject({}) { |memo, (key, v)| memo[key.to_s.to_sym]=v; memo }
     org_sign = sym_key_params[:sign]
     sym_key_params = sym_key_params.reject { |key, v| [:sign_type, :sign].include? key }
-    # sym_key_params = sym_key_params.inject([]) { |memo, (key, v)| memo << "#{key}=\"#{v}\""; memo }
     sym_key_params = sym_key_params.inject([]) { |memo, (key, v)| memo << "#{key}=#{v}"; memo }
     sym_key_params = sym_key_params.sort! { |m, n| m.to_s <=> n.to_s }
     signing_str = sym_key_params.join("&")
