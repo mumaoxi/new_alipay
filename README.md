@@ -2,6 +2,12 @@
 
 支付宝快捷支付+支付宝批量付款
 
+## Status
+代码 已经打包发布到 RubyGems.
+
+[![image](https://ruby-china-files.b0.upaiyun.com/photo/5982eaaa64f467d9dbda03ad4f40ea27.png)](https://rubygems.org/gems/new_alipay)
+
+
 ## Installation
 
 Add this line to your application's Gemfile:
