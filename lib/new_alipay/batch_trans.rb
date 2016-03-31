@@ -4,6 +4,12 @@ module NewAlipay
     #支付宝网关地址（新）
     ALIPAY_GATEWAY_NEW = 'https://mapi.alipay.com/gateway.do?'
 
+    #HTTPS形式消息验证地址
+    HTTPS_VERIFY_URL = 'https://mapi.alipay.com/gateway.do?service=notify_verify&'
+
+    # HTTP形式消息验证地址
+    HTTP_VERIFY_URL = 'http://notify.alipay.com/trade/notify_query.do?'
+
     module_function
     # 建立请求，以表单HTML形式构造（默认）
     # @param  para_temp 请求参数数组
@@ -31,5 +37,25 @@ module NewAlipay
       "#{ALIPAY_GATEWAY_NEW}#{sorted_signing_str_array.join('&')}"
     end
 
+    #params.except(*request.env.keys.push(:route_info))
+    # @param post_params 除去系统变量的参数
+    def verify_notify?(post_params)
+      verifing_sign = Digest::MD5.hexdigest(post_params.reject { |p| [:sign, :sign_type].include?(p) }
+                                                .inject([]) { |memo, (key, v)| memo << "#{key}=#{v}"; memo }
+                                                .sort! { |m, n| m.to_s <=> n.to_s }.join('&')+NewAlipay.key)
+      verifing_sign == post_params[:sign]
+
+      begin
+        conn = Faraday.new(:url => 'https://mapi.alipay.com') do |faraday|
+          faraday.request :url_encoded # form-encode POST params
+          faraday.response :logger # log requests to STDOUT
+          faraday.adapter Faraday.default_adapter # make requests with Net::HTTP
+        end
+        response = conn.get '/gateway.do', {:service => 'notify_verify', partner: NewAlipay.partner, notify_id: post_params[:notify_id]}
+        response.body.to_s == 'true'
+      rescue Exception => e
+        false
+      end
+    end
   end
 end
