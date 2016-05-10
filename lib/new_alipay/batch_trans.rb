@@ -28,7 +28,7 @@ module NewAlipay
           "email" => NewAlipay.seller_email,
           "account_name" => NewAlipay.account_name,
           "pay_date" => Time.new.strftime('%Y-%m-%d'),
-          "batch_no" => Time.new.strftime('%Y%m%d')+16.times.inject('') { |acc, i| acc+=('0'..'9').to_a[(i+Random.rand(1000))%10]; acc },
+          "batch_no" => random_trade_no(24),
           "batch_fee" => para_temp[:batch_fee],
           "batch_num" => para_temp[:batch_num],
           "detail_data" => para_temp[:detail_data],
