@@ -94,7 +94,7 @@ NewAlipay.account_name='xxxx公司/你的真实姓名'
                                            notify_url: 'http://test.yourserver.com/callback',
                                            batch_fee: 0.01,
                                            batch_num: 1,
-                                           detail_data: "#{Time.new.strftime('%Y%m%d')+18.times.inject('') { |acc, i| acc+=('0'..'9').to_a[(i+Random.rand(1000))%10]; acc }}^152xxxxyyyy^某某^0.01^测试支付"
+                                           detail_data: "#{NewAlipay::BatchTrans.random_trade_no(26)}^152xxxxyyyy^某某^0.01^测试支付"
 
                                        })
 ```

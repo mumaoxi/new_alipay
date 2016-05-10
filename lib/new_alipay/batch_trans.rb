@@ -11,6 +11,12 @@ module NewAlipay
     HTTP_VERIFY_URL = 'http://notify.alipay.com/trade/notify_query.do?'
 
     module_function
+
+    #返回随机交易密码
+    def random_trade_no(length=26)
+      Time.new.strftime('%Y%m%d')+(length-8).times.inject('') { |acc, i| acc+=('0'..'9').to_a[(i+Random.rand(1000))%10]; acc }
+    end
+
     # 建立请求，以表单HTML形式构造（默认）
     # @param  para_temp 请求参数数组
     # @return 提交表单HTML文本
