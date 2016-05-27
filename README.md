@@ -95,10 +95,13 @@ NewAlipay.account_name='xxxx公司/你的真实姓名'
                                            batch_fee: 0.01,
                                            batch_num: 1,
                                            detail_data: "#{NewAlipay::BatchTrans.random_trade_no(26)}^152xxxxyyyy^某某^0.01^测试支付"
-
-                                       })
+    }) do |hash|
+           puts hash #=>submit的所有参数
+       end
+                                      
 ```
 ####验证付款结果
+
 ```ruby
 request_result = NewAlipay::BatchTrans.verify_notify?({
                                                       _input_charset: 'utf-8',

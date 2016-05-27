@@ -40,6 +40,8 @@ module NewAlipay
 
       sorted_signing_str_array << "sign=#{sign}" << 'sign_type=MD5'
 
+      yield parameters.symbolize_keys.merge({:sign => sign, :sign_type => 'MD5'}) if block_given?
+
       "#{ALIPAY_GATEWAY_NEW}#{sorted_signing_str_array.join('&')}"
     end
 
