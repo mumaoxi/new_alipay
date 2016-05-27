@@ -45,6 +45,31 @@ module NewAlipay
       "#{ALIPAY_GATEWAY_NEW}#{sorted_signing_str_array.join('&')}"
     end
 
+    def resubmit(para_temp)
+      parameters = {
+          "service" => "batch_trans_notify",
+          "partner" => NewAlipay.partner,
+          "notify_url" => para_temp[:notify_url],
+          "email" => NewAlipay.seller_email,
+          "account_name" => NewAlipay.account_name,
+          "pay_date" => para_temp[:pay_date],
+          "batch_no" => para_temp[:batch_no],
+          "batch_fee" => para_temp[:batch_fee],
+          "batch_num" => para_temp[:batch_num],
+          "detail_data" => para_temp[:detail_data],
+          "_input_charset" => "utf-8"
+      }
+      signing_str_array = parameters.inject([]) { |memo, (key, v)| memo << "#{key}=#{v}"; memo }
+      sorted_signing_str_array = signing_str_array.sort! { |m, n| m.to_s <=> n.to_s }
+      sign = Digest::MD5.hexdigest(sorted_signing_str_array.join('&')+NewAlipay.key)
+
+      sorted_signing_str_array << "sign=#{sign}" << 'sign_type=MD5'
+
+      yield parameters.symbolize_keys.merge({:sign => sign, :sign_type => 'MD5'}) if block_given?
+
+      "#{ALIPAY_GATEWAY_NEW}#{sorted_signing_str_array.join('&')}"
+    end
+
     #params.except(*request.env.keys.push(:route_info))
     # @param post_params 除去系统变量的参数
     def verify_notify?(post_params)

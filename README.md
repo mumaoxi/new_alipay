@@ -100,6 +100,23 @@ NewAlipay.account_name='xxxx公司/你的真实姓名'
        end
                                       
 ```
+
+####重新获取批量付款（url）
+```ruby
+
+ request_url = NewAlipay::BatchTrans.resubmit({
+                                           notify_url: 'http://test.yourserver.com/callback',
+                                           batch_fee: 0.01,
+                                           batch_num: 1,
+                                           detail_data: "#{NewAlipay::BatchTrans.random_trade_no(26)}^152xxxxyyyy^某某^0.01^测试支付",
+                                           pay_date: '2016-05-27',
+                                           batch_no: '201605276309923730587826'
+    }) do |hash|
+           puts hash #=>submit的所有参数
+       end
+                                      
+```
+
 ####验证付款结果
 
 ```ruby
