@@ -34,6 +34,8 @@ module NewAlipay
           "detail_data" => para_temp[:detail_data],
           "_input_charset" => "utf-8"
       }
+      parameters = parameters.merge({buyer_account_name: para_temp[:buyer_account_name]}) if para_temp[:buyer_account_name]
+
       signing_str_array = parameters.inject([]) { |memo, (key, v)| memo << "#{key}=#{v}"; memo }
       sorted_signing_str_array = signing_str_array.sort! { |m, n| m.to_s <=> n.to_s }
       sign = Digest::MD5.hexdigest(sorted_signing_str_array.join('&')+NewAlipay.key)
@@ -59,6 +61,7 @@ module NewAlipay
           "detail_data" => para_temp[:detail_data],
           "_input_charset" => "utf-8"
       }
+      parameters = parameters.merge({buyer_account_name: para_temp[:buyer_account_name]}) if para_temp[:buyer_account_name]
       signing_str_array = parameters.inject([]) { |memo, (key, v)| memo << "#{key}=#{v}"; memo }
       sorted_signing_str_array = signing_str_array.sort! { |m, n| m.to_s <=> n.to_s }
       sign = Digest::MD5.hexdigest(sorted_signing_str_array.join('&')+NewAlipay.key)
