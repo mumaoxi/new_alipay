@@ -120,6 +120,7 @@ NewAlipay.account_name='xxxx公司/你的真实姓名'
 ####验证付款结果
 
 ```ruby
+#params.except(*request.env.keys.push(:route_info))
 request_result = NewAlipay::BatchTrans.verify_notify?({
                                                       _input_charset: 'utf-8',
                                                       batch_fee: 0.01,
@@ -129,6 +130,7 @@ request_result = NewAlipay::BatchTrans.verify_notify?({
                                                       sign: 'bc98542c95d33b08752qweq2a1ce162c8d',
                                                       detail_data: '201603316694019891235827213^152xxxxyyyy^xxxx^0.01^测试支付&email=yyyyxxx@qq.com&notify_url=http://test.yourserver.com/',
                                                       pay_date: '2016-03-31',
+                                                      notify_id: 'xxxxxxxx',
                                                       batch_num: 1,
                                                       service: 'batch_trans_notify',
                                                       sign_type: 'MD5'

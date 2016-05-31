@@ -73,10 +73,15 @@ module NewAlipay
     #params.except(*request.env.keys.push(:route_info))
     # @param post_params 除去系统变量的参数
     def verify_notify?(post_params)
+      post_sign = post_params[:sign]
       verifing_sign = Digest::MD5.hexdigest(post_params.reject { |p| [:sign, :sign_type].include?(p) }
                                                 .inject([]) { |memo, (key, v)| memo << "#{key}=#{v}"; memo }
                                                 .sort! { |m, n| m.to_s <=> n.to_s }.join('&')+NewAlipay.key)
-      verifing_sign == post_params[:sign]
+
+      puts "#{verifing_sign}:#{post_sign}"
+      unless verifing_sign == post_sign
+        return false
+      end
 
       begin
         conn = Faraday.new(:url => 'https://mapi.alipay.com') do |faraday|
